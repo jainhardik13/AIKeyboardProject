@@ -34,11 +34,9 @@ def drawALL(img, buttonList):
     for button in buttonList:
         x, y = button.pos
         w, h = button.size
-        cvzone.cornerRect(img, (button.pos[0], button.pos[1], button.size[0], button.size[1]),
-                          20, rt=0)
+        cvzone.cornerRect(img, (button.pos[0], button.pos[1], button.size[0], button.size[1]), 20, rt=0)
         cv2.rectangle(img, button.pos, (x + w, y + h), BUTTON_COLOR, cv2.FILLED)
-        cv2.putText(img, button.text, (x + 20, y + 65),
-                    cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
+        cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
     return img
 
 class Button():
@@ -58,10 +56,16 @@ for i in range(len(keys)):
 def handle_key_press(key):
     global finalText
     if key == "SPACE":
+        keyboard.press(' ')
+        keyboard.release(' ')
         finalText += " "
     elif key == "BACKSPACE":
+        keyboard.press('\b')
+        keyboard.release('\b')
         finalText = finalText[:-1]
     else:
+        keyboard.press(key)
+        keyboard.release(key)
         finalText += key
 
 while True:
@@ -79,8 +83,7 @@ while True:
 
                 if x < lmList[8][0] < x + w and y < lmList[8][1] < y + h:
                     cv2.rectangle(img, button.pos, (x+w, y+h), HIGHLIGHT_COLOR, cv2.FILLED)
-                    cv2.putText(img, button.text, (x + 20, y + 65),
-                                cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
+                    cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
                     
                     x1, y1 = lmList[8][0], lmList[8][1]
                     x2, y2 = lmList[4][0], lmList[4][1]
@@ -91,19 +94,17 @@ while True:
 
                         if l < 50:
                             cv2.rectangle(img, button.pos, (x+w, y+h), CLICK_COLOR, cv2.FILLED)
-                            cv2.putText(img, button.text, (x + 20, y + 65),
-                                        cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
+                            cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 4, TEXT_COLOR, 4)
                             handle_key_press(button.text)
-                            sleep(1)
+                            sleep(0.15)
                     except Exception as e:
                         print(f"Error calculating distance: {str(e)}")
 
     cv2.rectangle(img, (50,500), (700,600), HIGHLIGHT_COLOR, cv2.FILLED)
-    cv2.putText(img, finalText, (60, 580),
-                cv2.FONT_HERSHEY_PLAIN, 5, TEXT_COLOR, 3)
+    cv2.putText(img, finalText, (60, 580), cv2.FONT_HERSHEY_PLAIN, 5, TEXT_COLOR, 3)
 
     cv2.imshow("Virtual Keyboard", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
+    if cv2.waitKey(1) &  0xFF == ord('q'):
         break
 
 cap.release()
